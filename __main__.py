@@ -1,3 +1,4 @@
+import os
 import time
 from datetime import datetime
 import ssl
@@ -70,7 +71,12 @@ def crawling_nene():
 
     # 저장
     table = pd.DataFrame(results, columns=['name', 'address', 'sido', 'gugun'])
-    table.to_csv('__results__/nene.csv', encoding='utf-8', mode='w', index=True)
+
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    RESULT_DIR = f'{BASE_DIR}/__results__'
+    print(BASE_DIR)
+
+    table.to_csv('/root/crawling-results/nene.csv', encoding='utf-8', mode='w', index=True)
 
 def crawling_kyochon():
     results = []
@@ -107,7 +113,7 @@ def crawling_goobne():
     url = 'http://www.goobne.co.kr/store/search_store.jsp'
 
     # 첫 페이지 로딩
-    wd = webdriver.Chrome('C:\cafe24\chromedriver.exe')
+    wd = webdriver.Chrome('/cafe24/chromedriver/chromedriver.exe')
     wd.get(url)
     time.sleep(2)
 
