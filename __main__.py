@@ -5,7 +5,7 @@ import ssl
 import sys
 from itertools import count
 from urllib.request import Request, urlopen
-# import pandas as pd
+import pandas as pd
 from bs4 import BeautifulSoup
 from selenium import webdriver
 
@@ -70,13 +70,27 @@ def crawling_nene():
         page+=1
 
     # 저장
-    # table = pd.DataFrame(results, columns=['name', 'address', 'sido', 'gugun'])
+    table = pd.DataFrame(results, columns=['name', 'address', 'sido', 'gugun'])
+
+    finalResult = []
+
+    cnt = 0
+    for name in table['name']:
+
+        if name.count('강원') >= 1:
+            cnt+=1
+
+    if cnt > 60:
+        finalResult.append('Y')
+
+    testTable = pd.DataFrame(finalResult, columns=['critical issue'])
 
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     RESULT_DIR = f'{BASE_DIR}/__results__'
     print(BASE_DIR)
 
-    # table.to_csv('/root/crawling-results/nene.csv', encoding='utf-8', mode='w', index=True)
+    testTable.to_csv('__results__/testForMonitoring.csv', encoding='utf-8', mode='w', index=True)
+    table.to_csv('__results__/nene.csv', encoding='utf-8', mode='w', index=True)
 
 def crawling_kyochon():
     results = []
@@ -150,12 +164,29 @@ def crawling_goobne():
     # table = pd.DataFrame(results, columns=['name', 'address', 'sido', 'gugun'])
     # table.to_csv('__results__/goobne.csv', encoding='utf-8', mode='w', index=True)
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def getTestCsv():
+    df = pd.read_csv('D:/python_crawler/__results__/testForMonitoring.csv')
+    print(df.dropna().head())
+    cnt = 0
+    if df['critical issue'][0] == 'Y':
+        cnt = 1
+
+    plt.hist(cnt)
+    plt.show()
+
+
 if __name__  == '__main__':
     # pelicana
     # crawling_pelicana()
 
     # nene
-    crawling_nene()
+    # crawling_nene()
+
+    # get CSV file
+    getTestCsv()
 
     # kyochon
     # crawling_kyochon()
